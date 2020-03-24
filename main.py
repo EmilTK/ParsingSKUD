@@ -189,23 +189,20 @@ def start():
     folders = [folder for folder in os.walk('Отчеты')]
     for folder in folders[1:]:
         for file in folder[2]:
-            if file.endswith('.xlsx') and file.startswith('События'):
+            if file.endswith('.xlsx') and file.startswith('События') and not folder[0].endswith('old'):
                 file_month = month.index(file.split(' ')[-3])
                 file_year = int(file.split(' ')[-2])
                 date_list = []
                 for i in date.itermonthdates(file_year, file_month):
                     if i.month == file_month:
                         date_list.append(i.strftime('%d.%m.%Y'))
-                print('Парсинг {}'.format(folder[0]))
                 perco_file = os.path.join('', folder[0], file)
                 print('Файл {}'.format(perco_file))
                 parsing(perco_file, len(date_list))
-                print(len(contractors.keys()))
                 create_file(folder[0],
                             os.path.join('', folder[0], 'Отчет нахождения на объекте {}'.format(' '.join(file.split(' ')[1:]))),
                             date_list)
                 contractors.clear()
-                print('Список дней {}'.format(len(date_list)))
                 shutil.copy2(perco_file, os.path.join(folder[0], 'old', file))
                 os.remove(perco_file)
 
